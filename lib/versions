@@ -1,0 +1,5 @@
+kubeadm=1.23.6
+kubectl=1.23.6
+packer=1.8.0
+terraform=1.1.9
+vault=1.10.1
