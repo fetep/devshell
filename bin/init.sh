@@ -69,13 +69,8 @@ if [[ $? -ne 0 ]]; then
   exit 6
 fi
 
-echo "traps:"
-trap
-echo "--"
 while sudo -u "$target_user" tmux has-session -t dev; do
-  log "starting sleep"
   sleep 10
-  log "ending sleep"
 done
 
 log "shutting down, tmux dev session ended for $target_user"
