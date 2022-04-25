@@ -33,7 +33,7 @@ dev() {
     fi
 
     local docker_mount_args=""
-    for mount in /home $DEVSHELL_EXTRA_MOUNTS; do
+    for mount in $HOME $DEVSHELL_EXTRA_MOUNTS; do
       docker_mount_args="$docker_mount_args -v $mount:$mount"
     done
 
