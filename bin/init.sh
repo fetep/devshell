@@ -59,7 +59,7 @@ if [[ -n "$target_uid" ]]; then
   fi
 fi
 
-target_home="$(getent passwd \"$target_user\" | cut -d: -f6)"
+target_home="$(getent passwd $target_user | cut -d: -f6)"
 cd "$target_home" || exit 5
 
 log "starting tmux dev session for $target_user in $(pwd)"
