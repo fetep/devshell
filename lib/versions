@@ -1,3 +1,4 @@
+flux=0.29.3
 go=1.18.1
 kubeadm=1.23.6
 kubectl=1.23.6

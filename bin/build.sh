@@ -59,6 +59,11 @@ install_other() {
   curl -sL -o /usr/local/bin/minikube \
     https://storage.googleapis.com/minikube/releases/v$(_version minikube)/minikube-linux-amd64
   chmod 0755 /usr/local/bin/minikube
+
+  flux_ver=$(_version flux)
+  curl -sL -o "$tmpd/flux.tar.gz" \
+    https://github.com/fluxcd/flux2/releases/download/v${flux_ver}/flux_${flux_ver}_linux_amd64.tar.gz
+  sudo tar -C /usr/local/bin -xvzf "$tmpd/flux.tar.gz"
 }
 
 install_rpms() {
