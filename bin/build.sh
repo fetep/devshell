@@ -65,19 +65,31 @@ install_rpms() {
   PACKAGES="
     ansible
     bazel4
+    bind-utils
+    cowsay
     docker
+    figlet
     gh
     git
+    jwhois
     kubeadm-$(_version kubeadm)
     kubectl-$(_version kubectl)
     less
+    links
     lsof
     make
+    mtr
+    net-tools
+    nmap
+    nmap-ncat
     packer-$(_version packer)
+    redhat-lsb-core
     rsync
     strace
     tcpdump
+    telnet
     terraform-$(_version terraform)
+    traceroute
     tmux
     vault-$(_version vault)
     vim-enhanced
