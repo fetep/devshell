@@ -37,12 +37,12 @@ dev() {
       docker_mount_args="$docker_mount_args -v $mount:$mount"
     done
 
-    set -x
     $_devshell_docker run -d \
       -v /var/run/docker.sock:/var/run/docker.sock \
       $docker_mount_args \
       -h "$docker_host" \
       --name "$_devshell_name" \
+      --network=host \
       "$DEVSHELL_IMAGE" $docker_gid_arg -u $target_uid
   fi
 
