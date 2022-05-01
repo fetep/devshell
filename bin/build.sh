@@ -32,12 +32,15 @@ base_setup() {
   # extra repos + keys
   dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
   dnf config-manager --add-repo https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+  dnf config-manager --add-repo https://repo.mongodb.org/yum/redhat/7/mongodb-org/5.0/x86_64
   dnf config-manager --add-repo https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
 
+  dnf -qy copr enable dioni21/compat-openssl10
   dnf -qy copr enable vbatts/bazel
 
   rpm --import https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
   rpm --import https://packages.cloud.google.com/yum/doc/yum-key.gpg
+  rpm --import https://www.mongodb.org/static/pgp/server-5.0.asc
 }
 
 cleanup() {
@@ -71,6 +74,7 @@ install_rpms() {
     ansible
     bazel4
     bind-utils
+    compat-openssl10
     cowsay
     docker
     figlet
@@ -83,6 +87,9 @@ install_rpms() {
     links
     lsof
     make
+    mongodb-database-tools
+    mongodb-mongosh
+    mongodb-org-shell
     mtr
     net-tools
     nmap
