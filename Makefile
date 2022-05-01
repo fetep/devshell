@@ -1,4 +1,4 @@
 all: image
 
 image:
-	docker build -t fetep-devshell "$(CURDIR)"
+	docker build -t fetep/devshell "$(CURDIR)"

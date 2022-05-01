@@ -1,4 +1,4 @@
-: ${DEVSHELL_IMAGE:=${USER}-devshell}
+: ${DEVSHELL_IMAGE:=${USER}/devshell}
 
 _devshell_name="$USER-devshell"
 _devshell_docker="$DEVSHELL_DOCKER_SUDO docker"
