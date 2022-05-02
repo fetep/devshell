@@ -66,7 +66,9 @@ install_other() {
   flux_ver=$(_version flux)
   curl -sL -o "$tmpd/flux.tar.gz" \
     https://github.com/fluxcd/flux2/releases/download/v${flux_ver}/flux_${flux_ver}_linux_amd64.tar.gz
-  sudo tar -C /usr/local/bin -xvzf "$tmpd/flux.tar.gz"
+  tar -C /usr/local/bin -xvzf "$tmpd/flux.tar.gz"
+
+  pip3 install yq
 }
 
 install_rpms() {
@@ -80,6 +82,7 @@ install_rpms() {
     figlet
     gh
     git
+    jq
     jwhois
     kubeadm-$(_version kubeadm)
     kubectl-$(_version kubectl)
@@ -95,6 +98,7 @@ install_rpms() {
     nmap
     nmap-ncat
     packer-$(_version packer)
+    python3-pip
     redhat-lsb-core
     rsync
     strace
