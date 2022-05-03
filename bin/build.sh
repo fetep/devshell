@@ -31,6 +31,7 @@ base_setup() {
 
   # extra repos + keys
   dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
+  dnf config-manager --add-repo https://packages.cloud.google.com/yum/repos/cloud-sdk-el7-x86_64
   dnf config-manager --add-repo https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
   dnf config-manager --add-repo https://repo.mongodb.org/yum/redhat/7/mongodb-org/5.0/x86_64
   dnf config-manager --add-repo https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
@@ -68,6 +69,9 @@ install_other() {
     https://github.com/fluxcd/flux2/releases/download/v${flux_ver}/flux_${flux_ver}_linux_amd64.tar.gz
   tar -C /usr/local/bin -xvzf "$tmpd/flux.tar.gz"
 
+  curl -sL -o "$tmpd/awscli.zip" https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+  (cd "$tmpd" && unzip awscli.zip && cd aws && ./install)
+
   pip3 install yq
 }
 
@@ -76,12 +80,14 @@ install_rpms() {
     ansible
     bazel4
     bind-utils
+    bzip2
     compat-openssl10
     cowsay
     docker
     figlet
     gh
     git
+    google-cloud-cli
     jq
     jwhois
     kubeadm-$(_version kubeadm)
@@ -107,10 +113,12 @@ install_rpms() {
     terraform-$(_version terraform)
     traceroute
     tmux
+    unzip
     vault-$(_version vault)
     vim-enhanced
     vim-pathogen
     wget
+    zip
     zsh
   "
 
