@@ -85,6 +85,8 @@ install_rpms() {
     cowsay
     docker
     figlet
+    gcc
+    gcc-c++
     gh
     git
     google-cloud-cli
