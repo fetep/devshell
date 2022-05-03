@@ -77,6 +77,7 @@ install_other() {
 
 install_rpms() {
   PACKAGES="
+    ack
     ansible
     bazel4
     bind-utils
