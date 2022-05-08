@@ -25,6 +25,7 @@ base_setup() {
   install -m 0755 $bin_dir/init.sh /sbin/init.devshell
   echo "%wheel ALL=(ALL) NOPASSWD: ALL" >/etc/sudoers.d/devshell
 
+  sed -i -e '/^tsflags=nodocs/d' /etc/dnf/dnf.conf
   echo "fastestmirror=1" >>/etc/dnf/dnf.conf
   dnf -qy update
   dnf -qy install dnf-plugins-core
@@ -104,6 +105,7 @@ install_rpms() {
     links
     lsof
     make
+    man-pages
     mongodb-database-tools
     mongodb-mongosh
     mongodb-org-shell
