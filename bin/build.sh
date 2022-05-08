@@ -90,6 +90,7 @@ install_rpms() {
     cowsay
     docker
     figlet
+    fping
     gcc
     gcc-c++
     gh
