@@ -55,8 +55,12 @@ install_go() {
 
   # go env for binaries we need to build (no packages)
   export PATH=/usr/local/go/bin:$PATH
-  export GO="$tmpd/go"
-  mkdir -p "$GO"
+  export GOROOT=/usr/local/go
+  export GOPATH="$tmpd/go"
+  mkdir -p "$GOPATH"
+
+  go install github.com/fetep/xapply@latest
+  mv $GOPATH/bin/xapply /usr/local/bin
 }
 
 install_other() {
