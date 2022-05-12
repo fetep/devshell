@@ -43,6 +43,8 @@ base_setup() {
   rpm --import https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
   rpm --import https://packages.cloud.google.com/yum/doc/yum-key.gpg
   rpm --import https://www.mongodb.org/static/pgp/server-5.0.asc
+
+  rpm -i http://yum.puppet.com/puppet-release-fedora-34.noarch.rpm
 }
 
 cleanup() {
@@ -114,6 +116,7 @@ install_rpms() {
     nmap
     nmap-ncat
     packer-$(_version packer)
+    puppet-agent
     python3-pip
     redhat-lsb-core
     rsync
