@@ -86,24 +86,33 @@ install_rpms() {
   PACKAGES="
     ack
     ansible
+    autoconf
+    automake
     bazel4
     bind-utils
     bzip2
     compat-openssl10
     cowsay
+    ctags
     docker
     figlet
     fping
+    gettext-devel
     gcc
     gcc-c++
     gh
     git
     google-cloud-cli
+    jansson-devel
     jq
     jwhois
     kubeadm-$(_version kubeadm)
     kubectl-$(_version kubectl)
     less
+    libseccomp-devel
+    libtool
+    libxml2-devel
+    libyaml-devel
     links
     lsof
     make
@@ -116,6 +125,7 @@ install_rpms() {
     nmap
     nmap-ncat
     packer-$(_version packer)
+    pcre2-devel
     puppet-agent
     python3-pip
     redhat-lsb-core
