@@ -12,7 +12,7 @@ trap "set -x; rm -rf \"$tmpd\"" EXIT
 _version() {
   pkg=$1
   ver=${versions[$pkg]}
-  if [[ "$ver" == "" ]]; then
+  if [[ $ver == "" ]]; then
     echo "build: $pkg: no version specified" >&2
     exit 2
   fi
