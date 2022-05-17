@@ -12,7 +12,8 @@ _dev_kill() {
 # list running devshell instances. format is ${username}-devshell-${instance}
 _dev_list() {
   docker ps --format '{{ .Names }}: {{ .Status }}' \
-    | sed -n -e "s/^${USERNAME}-devshell-//p"
+    | sed -n -e "s/^${USERNAME}-devshell-//p" \
+    | sort
 }
 
 _dev_usage() {
