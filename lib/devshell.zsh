@@ -89,7 +89,6 @@ dev() {
     docker_status=""
   fi
 
-  echo docker_status=$docker_status
   if [[ $docker_status == "" ]]; then
     # since we mount docker.sock and $HOME from the base system, we need to match up the
     # main user's UID and docker's GID
