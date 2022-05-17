@@ -7,9 +7,15 @@ On start, a `dev` tmux session is created. When the tmux session ends, so does t
 container.
 
 [lib/devshell.zsh](https://github.com/fetep/devshell/blob/master/lib/devshell.zsh) contains
-a zsh function `dev`. This handles starting the container, and attaching to the tmux session
-inside of it. All terminal features seem to work well inside of `docker run -it` - including
+a zsh function `dev`. This handles starting the container and attaching to the tmux session
+inside of it. All terminal features seem to work well inside of `docker run -it`, including
 256 color support and [bracketed paste mode](https://cirw.in/blog/bracketed-paste).
+
+devshell supports multiple instances per user/host (separate containers, so separate tmux
+sessions). The default instance name is `1`. To list running containers, run `dev -l`. To attach
+to a specific instance, run `dev $instance`. To kill an instance, run `dev -k`.
+
+The environment variable `DEVSHELL` is set to the current instance name.
 
 ## Build
 

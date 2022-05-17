@@ -1,54 +1,116 @@
 : ${DEVSHELL_IMAGE:=${USER}/devshell}
 
-_devshell_name="$USER-devshell"
-_devshell_docker="$DEVSHELL_DOCKER_SUDO docker"
+# stop + cleanup an existing devshell instance
+_dev_kill() {
+  local instance=$1
+  local name="${USERNAME}-devshell-${instance}"
+  echo "dev: stopping devshell instance $name"
+  $docker stop "$name" >/dev/null 2>&1
+  $docker rm "$name" >/dev/null 2>&1
+}
+
+# list running devshell instances. format is ${username}-devshell-${instance}
+_dev_list() {
+  docker ps --format '{{ .Names }}: {{ .Status }}' \
+    | sed -n -e "s/^${USERNAME}-devshell-//p"
+}
+
+_dev_usage() {
+  echo "Usage: dev [-f] [-h] [-l] [instance]"
+  echo "-f          force repave (kill existing, start new)"
+  echo "-h          print this help message"
+  echo "-l          list running instances"
+  echo "instance    devshell instance name (defaults to 1)"
+}
 
 # attach into devshell container, start container if not running
 dev() {
-  # don't allow running this from inside a devshell for now
-  if [[ "$DEVSHELL" == "1" ]]; then
+  local docker="${DEVSHELL_DOCKER:-docker}"
+
+  # don't allow starting/modifying a devshell from inside one
+  if [[ -n $DEVSHELL ]]; then
     echo "dev: cannot run from inside a devshell" >&2
     return 1
   fi
 
-  # -f to force repave
-  if [[ $1 == "-f" ]]; then
-    $_devshell_docker stop "$_devshell_name" >/dev/null 2>&1
-    $_devshell_docker rm "$_devshell_name" >/dev/null 2>&1
+  if [[ ! -x =docker ]]; then
+    echo "dev: docker not installed" >&2
+    return 1
   fi
 
-  local docker_status=$(docker inspect -f '{{ .State.Status }}' "$_devshell_name" 2>/dev/null)
+  local force_repave=0 list=0 kill=0
+  while getopts "fhkl" opt; do
+    case "$opt" in
+      f) force_repave=1 ;;
+      h)
+        _dev_usage
+        return 0
+        ;;
+      k) kill=1 ;;
+      l) list=1 ;;
+      *)
+        _dev_usage >&2
+        return 1
+        ;;
+    esac
+  done
+  shift $((OPTIND-1))
+
+  if [[ $# > 1 ]]; then
+    echo "dev: too many arguments" >&2
+    _dev_usage >&2
+    return 1
+  fi
+
+  local instance=${1:-1}
+
+  if [[ $list == 1 && $kill == 1 ]]; then
+    echo "dev: -l and -k are mutually exclusive" >&2
+    return 1
+  elif [[ $list == 1 ]]; then
+    _dev_list
+    return $?
+  elif [[ $kill == 1 ]]; then
+    _dev_kill "$instance"
+    return $?
+  fi
+
+  local name="${USERNAME}-devshell-${instance}"
+
+  if [[ $force_repave == 1 ]]; then
+    _dev_kill "$instance"
+  fi
+
+  local docker_status="$(docker inspect -f '{{ .State.Status }}' "$name" 2>/dev/null)"
   if [[ $docker_status == "stopped" ]]; then
     # re-build stopped containers with latest image (a fresh 'docker run')
-    $_devshell_docker rm "$_devshell_name" >/dev/null 2>&1
+    $docker rm "$name" >/dev/null 2>&1
     docker_status=""
   fi
 
+  echo docker_status=$docker_status
   if [[ $docker_status == "" ]]; then
-    local docker_host="$(hostname -s)-ds"
-
     # since we mount docker.sock and $HOME from the base system, we need to match up the
     # main user's UID and docker's GID
     local docker_gid=$(getent group docker | cut -d: -f3)
     local target_uid=$(getent passwd "$USERNAME" | cut -d: -f3)
-
-    if [[ -n "$docker_gid" ]]; then
-      local docker_gid_arg="-d $docker_gid"
-    fi
-
     local docker_mount_args=""
     for mount in /var/run/docker.sock $HOME $DEVSHELL_EXTRA_MOUNTS; do
       docker_mount_args="$docker_mount_args -v $mount:$mount"
     done
 
-    $_devshell_docker run -d \
+    $docker run -d \
       $docker_mount_args \
-      -h "$docker_host" \
-      --name "$_devshell_name" \
+      -h "${HOST%%.*}-ds" \
+      --name "$name" \
       --network=host \
       --rm \
-      "$DEVSHELL_IMAGE" $docker_gid_arg -u $target_uid
+      -e "DEVSHELL=$instance" \
+      $docker_mount_args \
+      "${DEVSHELL_IMAGE:-${USER}/devshell}" -d "$docker_gid" -u "$target_uid" #>/dev/null
   fi
 
-  $_devshell_docker exec -it "$_devshell_name" /bin/attach
+  $docker exec -it "$name" /bin/attach
+  rc=$?
+  return $rc
 }

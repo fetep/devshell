@@ -39,6 +39,7 @@ done
 
 if [[ -z "$USERNAME" ]]; then
   err "\$USERNAME must be set to the target user"
+  exit 1
 fi
 target_user=$USERNAME
 
@@ -62,14 +63,15 @@ fi
 target_home="$(getent passwd $target_user | cut -d: -f6)"
 cd "$target_home" || exit 5
 
-log "starting tmux dev session for $target_user in $(pwd)"
-sudo -u "$target_user" tmux new-session -d -s dev
+tmux_name="devshell-${DEVSHELL}"
+log "starting tmux dev session \"$tmux_name\" for $target_user in $(pwd)"
+sudo -u "$target_user" --preserve-env=DEVSHELL tmux new-session -d -s "$tmux_name"
 if [[ $? -ne 0 ]]; then
   err "failed to start tmux dev session"
   exit 6
 fi
 
-while sudo -u "$target_user" tmux has-session -t dev; do
+while sudo -u "$target_user" tmux has-session -t "$tmux_name"; do
   sleep 10
 done
 

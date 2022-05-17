@@ -4,6 +4,6 @@ MAINTAINER petef@databits.net
 COPY ./ /build
 RUN /build/bin/build.sh && rm -rf /build
 
-ENV DEVSHELL=1 USERNAME=petef
+ENV USERNAME=petef
 
 ENTRYPOINT ["/sbin/init.devshell"]
