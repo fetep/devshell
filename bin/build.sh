@@ -79,6 +79,10 @@ install_other() {
   curl -sL -o "$tmpd/awscli.zip" https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
   (cd "$tmpd" && unzip awscli.zip && cd aws && ./install)
 
+  helm_ver=$(_version helm)
+  curl -sL -o "$tmpd/helm.tar.gz" https://get.helm.sh/helm-v${helm_ver}-linux-amd64.tar.gz
+  (cd "$tmpd" && tar xzf helm.tar.gz && install -c -m 755 linux-amd64/helm /usr/local/bin/helm)
+
   pip3 install yq
 }
 
