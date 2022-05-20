@@ -3,6 +3,7 @@ go=1.18.2
 helm==3.8.2
 kubeadm=1.23.6
 kubectl=1.23.6
+kustomize=4.5.4
 minikube=1.25.2
 packer=1.8.0
 terraform=1.1.9

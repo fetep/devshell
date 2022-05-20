@@ -83,6 +83,11 @@ install_other() {
   curl -sL -o "$tmpd/helm.tar.gz" https://get.helm.sh/helm-v${helm_ver}-linux-amd64.tar.gz
   (cd "$tmpd" && tar xzf helm.tar.gz && install -c -m 755 linux-amd64/helm /usr/local/bin/helm)
 
+  kust_ver=$(_version kustomize)
+  curl -sL -o "$tmpd/kust.tar.gz" \
+    https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${kust_ver}/kustomize_v${kust_ver}_linux_amd64.tar.gz
+  (cd "$tmpd" && tar xzf kust.tar.gz && install -c -m 755 kustomize /usr/local/bin/kustomize)
+
   pip3 install yq
 }
 
