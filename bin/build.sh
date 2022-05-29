@@ -88,6 +88,11 @@ install_other() {
     https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${kust_ver}/kustomize_v${kust_ver}_linux_amd64.tar.gz
   (cd "$tmpd" && tar xzf kust.tar.gz && install -c -m 755 kustomize /usr/local/bin/kustomize)
 
+  kuev_ver=$(_version kubeval)
+  curl -sL -o "$tmpd/kuev.tar.gz" \
+    https://github.com/instrumenta/kubeval/releases/download/v${kuev_ver}/kubeval-linux-amd64.tar.gz
+  (cd "$tmpd" && tar xzf kuev.tar.gz && install -c -m 755 kubeval /usr/local/bin/kubeval)
+
   pip3 install yq
 }
 
@@ -136,6 +141,7 @@ install_rpms() {
     packer-$(_version packer)
     pcre2-devel
     puppet-agent
+    pwgen
     python3-pip
     redhat-lsb-core
     rsync
