@@ -101,7 +101,7 @@ dev() {
 
     $docker run -d \
       $docker_mount_args \
-      -h "${HOST%%.*}-ds" \
+      -h "${HOST%%.*}-ds-${instance}" \
       --name "$name" \
       --network=host \
       --rm \
