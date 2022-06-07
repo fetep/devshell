@@ -38,7 +38,6 @@ base_setup() {
   dnf config-manager --add-repo https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
 
   dnf -qy copr enable dioni21/compat-openssl10
-  dnf -qy copr enable vbatts/bazel
 
   rpm --import https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
   rpm --import https://packages.cloud.google.com/yum/doc/yum-key.gpg
@@ -93,6 +92,12 @@ install_other() {
     https://github.com/instrumenta/kubeval/releases/download/v${kuev_ver}/kubeval-linux-amd64.tar.gz
   (cd "$tmpd" && tar xzf kuev.tar.gz && install -c -m 755 kubeval /usr/local/bin/kubeval)
 
+
+  bazel_ver=$(_version bazel)
+  curl -sL -o "$tmpd/bazel" \
+    https://github.com/bazelbuild/bazel/releases/download/${bazel_ver}/bazel-${bazel_ver}-linux-x86_64
+  install -c -m 755 "$tmpd/bazel" /usr/local/bin/bazel
+
   pip3 install yq
 }
 
@@ -102,9 +107,9 @@ install_rpms() {
     ansible
     autoconf
     automake
-    bazel4
     bind-utils
     bzip2
+    cloc
     compat-openssl10
     cowsay
     ctags
