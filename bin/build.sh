@@ -114,6 +114,7 @@ install_rpms() {
     cowsay
     ctags
     docker
+    docker-compose
     figlet
     fping
     gettext-devel
