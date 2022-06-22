@@ -142,8 +142,10 @@ install_rpms() {
     mongodb-org-shell
     mtr
     net-tools
+    nodejs-$(_version nodejs)
     nmap
     nmap-ncat
+    npm-$(_version npm)
     packer-$(_version packer)
     pcre2-devel
     puppet-agent
