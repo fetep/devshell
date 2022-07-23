@@ -92,8 +92,17 @@ install_other() {
     https://github.com/instrumenta/kubeval/releases/download/v${kuev_ver}/kubeval-linux-amd64.tar.gz
   (cd "$tmpd" && tar xzf kuev.tar.gz && install -c -m 755 kubeval /usr/local/bin/kubeval)
 
-
   bazel_ver=$(_version bazel)
+  curl -sL -o "$tmpd/bazel" \
+    https://github.com/bazelbuild/bazel/releases/download/${bazel_ver}/bazel-${bazel_ver}-linux-x86_64
+  install -c -m 755 "$tmpd/bazel" /usr/local/bin/bazel
+
+  node_ver=$(_version nodejs)
+  curl -sL -o "$tmpd/node.tar.xz" \
+    https://nodejs.org/dist/v${node_ver}/node-v${node_ver}-linux-x64.tar.xz
+  (cd "$tmpd" && tar xf node.tar.xz)
+  mv "$tmpd/node-v${node_ver}-linux-x64" /usr/local/node
+
   curl -sL -o "$tmpd/bazel" \
     https://github.com/bazelbuild/bazel/releases/download/${bazel_ver}/bazel-${bazel_ver}-linux-x86_64
   install -c -m 755 "$tmpd/bazel" /usr/local/bin/bazel
@@ -142,10 +151,8 @@ install_rpms() {
     mongodb-org-shell
     mtr
     net-tools
-    nodejs-$(_version nodejs)
     nmap
     nmap-ncat
-    npm-$(_version npm)
     packer-$(_version packer)
     pcre2-devel
     puppet-agent
