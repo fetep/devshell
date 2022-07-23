@@ -36,6 +36,7 @@ base_setup() {
   dnf config-manager --add-repo https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
   dnf config-manager --add-repo https://repo.mongodb.org/yum/redhat/7/mongodb-org/5.0/x86_64
   dnf config-manager --add-repo https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
+  dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
 
   dnf -qy copr enable dioni21/compat-openssl10
 
@@ -122,8 +123,8 @@ install_rpms() {
     compat-openssl10
     cowsay
     ctags
-    docker
-    docker-compose
+    docker-ce-cli
+    docker-compose-plugin
     figlet
     fping
     gettext-devel
