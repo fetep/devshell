@@ -109,6 +109,10 @@ install_other() {
   install -c -m 755 "$tmpd/bazel" /usr/local/bin/bazel
 
   pip3 install yq
+
+  curl -sL -o "$tmpd/rvm-installer" \
+    https://raw.githubusercontent.com/rvm/rvm/master/binscripts/rvm-installer
+  bash "$tmpd/rvm-installer"
 }
 
 install_rpms() {
@@ -139,6 +143,7 @@ install_rpms() {
     kubeadm-$(_version kubeadm)
     kubectl-$(_version kubectl)
     less
+    libpq-devel
     libseccomp-devel
     libtool
     libxml2-devel
@@ -189,7 +194,7 @@ load_versions() {
 }
 
 user_setup() {
-  useradd -U -m --groups=docker,root,wheel -s /bin/zsh petef
+  useradd -U -m --groups=docker,root,rvm,wheel -s /bin/zsh petef
 }
 
 load_versions
