@@ -109,10 +109,6 @@ install_other() {
   (cd "$tmpd" && tar xf node.tar.xz)
   mv "$tmpd/node-v${node_ver}-linux-x64" /usr/local/node
 
-  curl -sL -o "$tmpd/bazel" \
-    https://github.com/bazelbuild/bazel/releases/download/${bazel_ver}/bazel-${bazel_ver}-linux-x86_64
-  install -c -m 755 "$tmpd/bazel" /usr/local/bin/bazel
-
   pip3 install yq
 
   curl -sL -o "$tmpd/rvm-installer" \
