@@ -71,6 +71,11 @@ install_other() {
     https://storage.googleapis.com/minikube/releases/v$(_version minikube)/minikube-linux-amd64
   chmod 0755 /usr/local/bin/minikube
 
+  argo_ver=$(_version argocd)
+  curl -sL -o /usr/local/bin/argocd \
+    https://github.com/argoproj/argo-cd/releases/download/v${argo_ver}/argocd-linux-amd64
+  chmod 0755 /usr/local/bin/argocd
+
   flux_ver=$(_version flux)
   curl -sL -o "$tmpd/flux.tar.gz" \
     https://github.com/fluxcd/flux2/releases/download/v${flux_ver}/flux_${flux_ver}_linux_amd64.tar.gz
