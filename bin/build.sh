@@ -111,9 +111,12 @@ install_other() {
 
   pip3 install yq
 
+  ruby_ver=$(_version ruby)
   curl -sL -o "$tmpd/rvm-installer" \
     https://raw.githubusercontent.com/rvm/rvm/master/binscripts/rvm-installer
   bash "$tmpd/rvm-installer"
+  source /etc/profile.d/rvm.sh
+  rvm install ruby-${ruby_ver}
 }
 
 install_rpms() {
