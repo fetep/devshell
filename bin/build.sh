@@ -117,6 +117,9 @@ install_other() {
   bash "$tmpd/rvm-installer"
   source /etc/profile.d/rvm.sh
   rvm install ruby-${ruby_ver}
+
+  ecr_helper_ver=$(_version amazon-ecr-credential-helper)
+  curl -sL -o /usr/local/bin/docker-credential-ecr-login "https://amazon-ecr-credential-helper-releases.s3.us-east-2.amazonaws.com/${ecr_helper_ver}/linux-amd64/docker-credential-ecr-login"
 }
 
 install_rpms() {
