@@ -111,15 +111,27 @@ install_other() {
 
   pip3 install yq
 
+  ecr_helper_ver=$(_version amazon-ecr-credential-helper)
+  curl -sL -o /usr/local/bin/docker-credential-ecr-login "https://amazon-ecr-credential-helper-releases.s3.us-east-2.amazonaws.com/${ecr_helper_ver}/linux-amd64/docker-credential-ecr-login"
+  chmod 755 /usr/local/bin/docker-credential-ecr-login
+
+  gh_ver=$(_version gh)
+  curl -sL -o "$tmpd/gh.tar.gz" \
+    https://github.com/cli/cli/releases/download/v${gh_ver}/gh_${gh_ver}_linux_amd64.tar.gz
+  (cd "$tmpd" && tar xzf gh.tar.gz)
+  install -c -m 755 "$tmpd/gh_${gh_ver}_linux_amd64/bin/gh" /usr/local/bin/gh
+
+  k3sup_ver=$(_version k3sup)
+  curl -sL -o /usr/local/bin/k3sup "https://github.com/alexellis/k3sup/releases/download/${k3sup_ver}/k3sup"
+  chmod 755 /usr/local/bin/k3sup
+
+  # keep last
   ruby_ver=$(_version ruby)
   curl -sL -o "$tmpd/rvm-installer" \
     https://raw.githubusercontent.com/rvm/rvm/master/binscripts/rvm-installer
   bash "$tmpd/rvm-installer"
   source /etc/profile.d/rvm.sh
   rvm install ruby-${ruby_ver}
-
-  ecr_helper_ver=$(_version amazon-ecr-credential-helper)
-  curl -sL -o /usr/local/bin/docker-credential-ecr-login "https://amazon-ecr-credential-helper-releases.s3.us-east-2.amazonaws.com/${ecr_helper_ver}/linux-amd64/docker-credential-ecr-login"
 }
 
 install_rpms() {
