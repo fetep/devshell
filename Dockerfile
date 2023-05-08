@@ -1,4 +1,4 @@
-FROM fedora:35
+FROM fedora:38
 MAINTAINER petef@databits.net
 
 COPY ./ /build

@@ -32,9 +32,9 @@ base_setup() {
 
   # extra repos + keys
   dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
-  dnf config-manager --add-repo https://packages.cloud.google.com/yum/repos/cloud-sdk-el7-x86_64
+  dnf config-manager --add-repo https://packages.cloud.google.com/yum/repos/cloud-sdk-el9-x86_64
   dnf config-manager --add-repo https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
-  dnf config-manager --add-repo https://repo.mongodb.org/yum/redhat/7/mongodb-org/5.0/x86_64
+  dnf config-manager --add-repo https://repo.mongodb.org/yum/redhat/9/mongodb-org/5.0/x86_64
   dnf config-manager --add-repo https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
   dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
 
@@ -43,8 +43,6 @@ base_setup() {
   rpm --import https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
   rpm --import https://packages.cloud.google.com/yum/doc/yum-key.gpg
   rpm --import https://www.mongodb.org/static/pgp/server-5.0.asc
-
-  rpm -i http://yum.puppet.com/puppet-release-fedora-34.noarch.rpm
 }
 
 cleanup() {
@@ -124,14 +122,6 @@ install_other() {
   k3sup_ver=$(_version k3sup)
   curl -sL -o /usr/local/bin/k3sup "https://github.com/alexellis/k3sup/releases/download/${k3sup_ver}/k3sup"
   chmod 755 /usr/local/bin/k3sup
-
-  # keep last
-  ruby_ver=$(_version ruby)
-  curl -sL -o "$tmpd/rvm-installer" \
-    https://raw.githubusercontent.com/rvm/rvm/master/binscripts/rvm-installer
-  bash "$tmpd/rvm-installer"
-  source /etc/profile.d/rvm.sh
-  rvm install ruby-${ruby_ver}
 }
 
 install_rpms() {
@@ -173,15 +163,15 @@ install_rpms() {
     man-pages
     mongodb-database-tools
     mongodb-mongosh
-    mongodb-org-shell
     mtr
     net-tools
     nmap
     nmap-ncat
     packer-$(_version packer)
     pcre2-devel
-    puppet-agent
+    puppet
     pwgen
+    python3-flake8
     python3-pip
     redhat-lsb-core
     rsync
@@ -213,7 +203,7 @@ load_versions() {
 }
 
 user_setup() {
-  useradd -U -m --groups=docker,root,rvm,wheel -s /bin/zsh petef
+  useradd -U -m --groups=docker,root,wheel -s /bin/zsh petef
 }
 
 load_versions
