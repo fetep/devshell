@@ -132,7 +132,6 @@ install_other() {
 install_rpms() {
   PACKAGES="
     ack
-    ansible
     autoconf
     automake
     bind-utils
