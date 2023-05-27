@@ -39,6 +39,11 @@ base_setup() {
   dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
 
   dnf -qy copr enable dioni21/compat-openssl10
+  dnf -qy copr enable nili/pyenv
+
+  # key is broken?
+  sudo sed -i -e 's/gpgcheck=1/gpgcheck=0/' \
+    /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:nili:pyenv.repo
 
   rpm --import https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
   rpm --import https://packages.cloud.google.com/yum/doc/yum-key.gpg
@@ -171,6 +176,7 @@ install_rpms() {
     pcre2-devel
     puppet
     pwgen
+    pyenv
     python3-flake8
     python3-pip
     redhat-lsb-core
