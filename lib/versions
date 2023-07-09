@@ -1,5 +1,5 @@
 amazon-ecr-credential-helper=0.6.0
-argocd=2.4.14
+argocd=2.7.3
 bazel=6.1.0
 flux=0.29.3
 gh=2.27.0
