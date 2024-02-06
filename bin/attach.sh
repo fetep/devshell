@@ -5,6 +5,8 @@
 
 progname=$(basename "$0")
 
+set -euo pipefail
+
 log() {
   echo "$progname: ""$@"
 }
@@ -13,7 +15,8 @@ err() {
   log "$@" >&2
 }
 
-while ! sudo -u "$USERNAME" tmux has-session -t dev >/dev/null 2>&1; do
+count=0
+while ! tmux has-session -t dev >/dev/null 2>&1; do
   count=$((count+1))
   if [[ $count > 5 ]]; then
     err "cannot find dev tmux session"
@@ -22,4 +25,4 @@ while ! sudo -u "$USERNAME" tmux has-session -t dev >/dev/null 2>&1; do
   sleep 1
 done
 
-exec sudo -u "$USERNAME" tmux attach -t dev
+exec tmux attach -t dev

@@ -5,6 +5,8 @@
 
 progname="${0##*/}"
 
+set -euo pipefail
+
 log() {
   echo "$(date): $progname: ""$@"
 }
@@ -14,19 +16,22 @@ err() {
 }
 
 usage() {
-  echo "Usage: $progname [-d docker_gid] [-u target_uid]"
+  echo "Usage: $progname [-x] [-d docker_gid] [-u target_uid]"
 }
 
 # catch an INT (^C) from a 'docker run -i' and a TERM from 'docker stop'
 trap "exit 2" SIGINT TERM
 
-while getopts "d:u:" opt; do
+while getopts "d:u:x" opt; do
   case "$opt" in
     d)
       docker_gid=$OPTARG
       ;;
     u)
       target_uid=$OPTARG
+      ;;
+    x)
+      set -x
       ;;
     *)
       err "$opt: invalid option"
@@ -37,13 +42,12 @@ while getopts "d:u:" opt; do
   shift
 done
 
-if [[ -z "$USERNAME" ]]; then
-  err "\$USERNAME must be set to the target user"
+if [[ -z ${USER:-} ]]; then
+  err "\$USER must be set to the target user"
   exit 1
 fi
-target_user=$USERNAME
 
-if [[ -n "$docker_gid" ]]; then
+if [[ -n ${docker_gid:-} ]]; then
   sudo groupmod -g "$docker_gid" docker
   if [[ $? -ne 0 ]]; then
     err "failed to set docker gid to $docker_gid"
@@ -51,29 +55,29 @@ if [[ -n "$docker_gid" ]]; then
   fi
 fi
 
-if [[ -n "$target_uid" ]]; then
+if [[ -n ${target_uid:-} ]]; then
   # "usermod -u" not used; it does a recursive chown of the user's home
-  sudo sed -i -e "s/^${target_user}:x:\(\d+\):/${target_user}:x:${target_uid}:/" /etc/passwd
+  sudo sed -i -e "s/^${USER}:x:\(\d+\):/${USER}:x:${target_uid}:/" /etc/passwd
   if [[ $? -ne 0 ]]; then
-    err "failed to set $target_user uid to $target_uid"
+    err "failed to set $USER uid to $target_uid"
     exit 4
   fi
 fi
 
-target_home="$(getent passwd $target_user | cut -d: -f6)"
+target_home="$(getent passwd $USER | cut -d: -f6)"
 cd "$target_home" || exit 5
 
 tmux_name="devshell-${DEVSHELL}"
-log "starting tmux dev session \"$tmux_name\" for $target_user in $(pwd)"
-sudo -u "$target_user" --preserve-env=DEVSHELL tmux new-session -d -s "$tmux_name"
+log "starting tmux dev session \"$tmux_name\" for $USER in $(pwd)"
+sudo -u "$USER" --preserve-env=DEVSHELL tmux new-session -d -s "$tmux_name"
 if [[ $? -ne 0 ]]; then
   err "failed to start tmux dev session"
   exit 6
 fi
 
-while sudo -u "$target_user" tmux has-session -t "$tmux_name"; do
+while sudo -u "$USER" tmux has-session -t "$tmux_name"; do
   sleep 10
 done
 
-log "shutting down, tmux dev session ended for $target_user"
+log "shutting down, tmux dev session ended for $USER"
 exit 0
