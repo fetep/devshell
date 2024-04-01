@@ -1,5 +1,4 @@
 all: image
 
 image:
-	nix-build devshell.nix
-	docker load < result
+	docker build -t fetep/devshell "$(CURDIR)"

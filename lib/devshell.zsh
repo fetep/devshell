@@ -1,3 +1,5 @@
+: ${DEVSHELL_IMAGE:=${USER}/devshell}
+
 # stop + cleanup an existing devshell instance
 _dev_kill() {
   local instance=$1
@@ -29,6 +31,11 @@ dev() {
   # don't allow starting/modifying a devshell from inside one
   if [[ -n $DEVSHELL ]]; then
     echo "dev: cannot run from inside a devshell" >&2
+    return 1
+  fi
+
+  if [[ ! -x =docker ]]; then
+    echo "dev: docker not installed" >&2
     return 1
   fi
 
@@ -86,7 +93,7 @@ dev() {
     # since we mount docker.sock and $HOME from the base system, we need to match up the
     # main user's UID and docker's GID
     local docker_gid=$(getent group docker | cut -d: -f3)
-    local target_uid=$(getent passwd "$USER" | cut -d: -f3)
+    local target_uid=$(getent passwd "$USERNAME" | cut -d: -f3)
     local docker_mount_args=""
     for mount in /var/run/docker.sock $HOME $DEVSHELL_EXTRA_MOUNTS; do
       docker_mount_args="$docker_mount_args -v $mount:$mount"
@@ -97,13 +104,10 @@ dev() {
       -h "${HOST%%.*}-ds-${instance}" \
       --name "$name" \
       --network=host \
-      --cap-add SYS_ADMIN \
-      --security-opt apparmor:unconfined \
-      --device /dev/fuse \
       --rm \
       -e "DEVSHELL=$instance" \
       $docker_mount_args \
-      "${DEVSHELL_IMAGE:-devshell-$USER}:latest" -d "$docker_gid" -u "$target_uid"
+      "${DEVSHELL_IMAGE:-${USER}/devshell}" -d "$docker_gid" -u "$target_uid" #>/dev/null
   fi
 
   $docker exec -it "$name" /bin/attach
