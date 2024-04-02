@@ -1,4 +1,4 @@
-: ${DEVSHELL_IMAGE:=${USER}/devshell}
+: ${DEVSHELL_IMAGE:=fetep/devshell}
 
 # stop + cleanup an existing devshell instance
 _dev_kill() {

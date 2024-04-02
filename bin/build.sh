@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # build out a development environment
 
-set -e
+set -euo pipefail
 
 bin_dir=$(dirname $0)
 tmpd="$(mktemp -d)"
@@ -41,10 +41,6 @@ base_setup() {
   dnf -qy copr enable dioni21/compat-openssl10
   dnf -qy copr enable nili/pyenv
 
-  # key is broken?
-  sudo sed -i -e 's/gpgcheck=1/gpgcheck=0/' \
-    /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:nili:pyenv.repo
-
   rpm --import https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
   rpm --import https://packages.cloud.google.com/yum/doc/yum-key.gpg
   rpm --import https://www.mongodb.org/static/pgp/server-5.0.asc
@@ -78,11 +74,6 @@ install_other() {
   curl -sL -o /usr/local/bin/argocd \
     https://github.com/argoproj/argo-cd/releases/download/v${argo_ver}/argocd-linux-amd64
   chmod 0755 /usr/local/bin/argocd
-
-  flux_ver=$(_version flux)
-  curl -sL -o "$tmpd/flux.tar.gz" \
-    https://github.com/fluxcd/flux2/releases/download/v${flux_ver}/flux_${flux_ver}_linux_amd64.tar.gz
-  tar -C /usr/local/bin -xvzf "$tmpd/flux.tar.gz"
 
   curl -sL -o "$tmpd/awscli.zip" https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
   (cd "$tmpd" && unzip awscli.zip && cd aws && ./install)
@@ -153,8 +144,7 @@ install_rpms() {
     jansson-devel
     jq
     jwhois
-    kubeadm-$(_version kubeadm)
-    kubectl-$(_version kubectl)
+    kubectl
     less
     libpq-devel
     libseccomp-devel
@@ -168,6 +158,7 @@ install_rpms() {
     mongodb-database-tools
     mongodb-mongosh
     mtr
+    neovim
     net-tools
     nmap
     nmap-ncat
@@ -188,8 +179,6 @@ install_rpms() {
     tmux
     unzip
     vault-$(_version vault)
-    vim-enhanced
-    vim-pathogen
     wget
     zip
     zsh
