@@ -66,13 +66,21 @@ cd "$target_home" || exit 5
 tmux_name="devshell-${DEVSHELL}"
 log "starting tmux dev session \"$tmux_name\" for $target_user in $(pwd)"
 sudo -u "$target_user" --preserve-env=DEVSHELL tmux new-session -d -s "$tmux_name"
-if [[ $? -ne 0 ]]; then
-  err "failed to start tmux dev session"
+rc=$?
+if [[ $rc -ne 0 ]]; then
+  err "failed to start tmux dev session (exit code $rc)"
   exit 6
 fi
 
-while sudo -u "$target_user" tmux has-session -t "$tmux_name"; do
-  sleep 10
+tmux_pid="$(pgrep -f 'tmux new-session')"
+if [[ -z $tmux_pid ]]; then
+  err "can't find newly launched tmux pid"
+  exit 7
+fi
+echo "started tmux (pid $tmux_pid)"
+
+while ps -p "$tmux_pid" >/dev/null; do
+  sleep 1
 done
 
 log "shutting down, tmux dev session ended for $target_user"
