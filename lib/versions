@@ -1,6 +1,6 @@
 amazon-ecr-credential-helper=0.6.0
 argocd=2.10.5
-bazel=7.1.1
+bazelisk=1.19.0
 gh=2.27.0
 go=1.22.1
 helm=3.11.2
@@ -8,7 +8,6 @@ k3sup=0.12.13
 kubeval=0.16.1
 kustomize=5.3.0
 minikube=1.32.0
-nodejs=19.7.0
 packer=1.10.2
 ruby=3.1.4
 terraform=1.7.5

@@ -92,17 +92,6 @@ install_other() {
     https://github.com/instrumenta/kubeval/releases/download/v${kuev_ver}/kubeval-linux-amd64.tar.gz
   (cd "$tmpd" && tar xzf kuev.tar.gz && install -c -m 755 kubeval /usr/local/bin/kubeval)
 
-  bazel_ver=$(_version bazel)
-  curl -sL -o "$tmpd/bazel" \
-    https://github.com/bazelbuild/bazel/releases/download/${bazel_ver}/bazel-${bazel_ver}-linux-x86_64
-  install -c -m 755 "$tmpd/bazel" /usr/local/bin/bazel
-
-  node_ver=$(_version nodejs)
-  curl -sL -o "$tmpd/node.tar.xz" \
-    https://nodejs.org/dist/v${node_ver}/node-v${node_ver}-linux-x64.tar.xz
-  (cd "$tmpd" && tar xf node.tar.xz)
-  mv "$tmpd/node-v${node_ver}-linux-x64" /usr/local/node
-
   pip3 install yq
 
   ecr_helper_ver=$(_version amazon-ecr-credential-helper)
@@ -118,6 +107,10 @@ install_other() {
   k3sup_ver=$(_version k3sup)
   curl -sL -o /usr/local/bin/k3sup "https://github.com/alexellis/k3sup/releases/download/${k3sup_ver}/k3sup"
   chmod 755 /usr/local/bin/k3sup
+
+  bazelisk_ver=$(_version bazelisk)
+  curl -sL -o /usr/local/bin/bazelisk "https://github.com/bazelbuild/bazelisk/releases/download/v${bazelisk_ver}/bazelisk-linux-amd64"
+  chmod 755 /usr/local/bin/bazelisk
 }
 
 install_rpms() {
