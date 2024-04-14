@@ -105,6 +105,7 @@ dev() {
       --name "$name" \
       --network=host \
       --rm \
+      --cap-add=CAP_IPC_LOCK \
       -e "DEVSHELL=$instance" \
       $docker_mount_args \
       "${DEVSHELL_IMAGE:-${USER}/devshell}" -d "$docker_gid" -u "$target_uid" #>/dev/null
