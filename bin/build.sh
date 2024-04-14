@@ -111,6 +111,7 @@ install_other() {
   bazelisk_ver=$(_version bazelisk)
   curl -sL -o /usr/local/bin/bazelisk "https://github.com/bazelbuild/bazelisk/releases/download/v${bazelisk_ver}/bazelisk-linux-amd64"
   chmod 755 /usr/local/bin/bazelisk
+  ln -s /usr/local/bin/bazelisk /usr/local/bin/bazel
 }
 
 install_rpms() {
